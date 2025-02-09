@@ -17,23 +17,24 @@ jest.mock('../reader.js', () => ({
 }));
 
 describe('Testing GameSavingLoader', () => {
-    test('GameSavingLoader.load should return a valid GameSaving object', async () => {
-        const result = await GameSavingLoader.load();
-        expect(result).toEqual({
-            id: 9,
-            created: 1546300800,
-            userInfo: {
-                id: 1,
-                name: "Hitman",
-                level: 10,
-                points: 2000,
-            },
+    test('GameSavingLoader.load should return a valid GameSaving object', () => {
+        return GameSavingLoader.load().then(result => {
+            expect(result).toEqual({
+                id: 9,
+                created: 1546300800,
+                userInfo: {
+                    id: 1,
+                    name: "Hitman",
+                    level: 10,
+                    points: 2000,
+                },
+            });
         });
     });
 });
 
-test('should handle errors correctly', async () => {
-  read.mockImplementationOnce(() => Promise.reject(new Error('File not found')));
+test('should handle errors correctly', () => {
+    read.mockImplementationOnce(() => Promise.reject(new Error('File not found')));
 
-  await expect(GameSavingLoader.load()).rejects.toThrow('File not found');
+    return expect(GameSavingLoader.load()).rejects.toThrow('File not found');
 });
